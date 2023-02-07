@@ -1,0 +1,61 @@
+{
+    "manifestVersion": 1,
+    "id": "s4tools",
+    "version": "0.1.5",
+    "name": "Infosoft Tooling",
+    "publisher": "infosoft",
+    "description": "Tasks and stuff we use in the Infosoft dev flows (mostly CI/CD).",
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services.Cloud"
+        }
+    ],
+    "icons": {
+        "default": "images/icon.png"
+    },
+    "scopes": [
+        "vso.build",
+        "vso.packaging",
+        "vso.release",
+        "vso.symbols"
+    ],
+    "categories": [
+        "Azure Pipelines"
+    ],
+    "branding": {
+        "theme": "dark"
+    },
+    "content": {
+        "details": {
+            "path": "readme.md"
+        }
+    },
+    "links": {
+        "getstarted": {
+            "uri": "https://www.infosoft.no"
+        },
+        "support": {
+            "uri": "https://www.infosoft.no"
+        }
+    },
+    "contributions": [
+        {
+            "id": "download-artifacts-release-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "DownloadArtifacts"
+            }
+        }
+    ],
+    "files": [
+        {
+            "path": "DownloadArtifacts"
+        }
+    ],
+    "CustomerQnASupport": {
+        "enablemarketplaceqna": "false"
+    }
+}

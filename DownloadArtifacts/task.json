@@ -1,0 +1,54 @@
+{
+  "id": "e61ec4cb-4bae-46e6-8ea8-9371e924fe30",
+  "name": "download-artifacts",
+  "friendlyName": "Download Build Artifacts",
+  "description": "Download build artifacts on releases with filtering by artifact name, when you have more than one artifact, or download sub folders or files, without downloading the entire artifact folder.",
+  "helpMarkDown": "There is no help!",
+  "category": "Utility",
+  "visibility": [
+    "Release"
+  ],
+  "author": "Esben Bach",
+  "version": {
+    "Major": 0,
+    "Minor": 0,
+    "Patch": 5
+  },
+  "demands": [
+  ],
+  "minimumAgentVersion": "2.115.0",
+  "groups": [
+
+  ],
+  "inputs": [
+    {
+      "name": "artifactNames",
+      "type": "multiLine",
+      "label": "Build Artifact Names",
+      "required": true,
+      "helpMarkDown": "Artifact Names/Paths to Download separated by ;. (Git is NOT supported). Multiple artifacts can be specified with pattern ArtifactSourceAlias1\\Drop;ArtifactSourceAlias2\\Drop. Artifact name with subpath allows to download sub item of a given artifact. Multiple can be specified with pattern ArtifactSourceAlias1\\Drop1\\MyWebProj;ArtifactSourceAlias1\\Drop1\\ReleaseNote.html;ArtifactSourceAlias2\\Drop2;ArtifactSourceAlias3\\Drop3\\MyWebProj2 . Wildcards are NOT supported."
+    },
+    {
+      "name": "artifactDestinationFolder",
+      "type": "filePath",
+      "label": "Artifacts Destination",
+      "defaultValue": "$(System.ArtifactsDirectory)",
+      "required": false,
+      "helpMarkDown": "Absolute path of the destination folder on the local machine, or a UNC Share like c:\\fabrikamfiber or \\\\\\\\fabrikamshare\\fabrikamfiber. If not supplied default value $(System.ArtifactsDirectory) will be applied automatically"
+    },
+    {
+      "name": "expandArchive",
+      "type": "boolean",
+      "label": "Expand/Extract Archive",
+      "defaultValue": true,
+      "required": false,
+      "helpMarkDown": "Should the task attempt to automatically expand the downloaded archives?"
+    }
+  ],
+  "instanceNameFormat": "Download Build Artifacts",
+  "execution": {
+    "PowerShell3": {
+      "target": "DownloadArtifacts.ps1"
+    }
+  }
+}
