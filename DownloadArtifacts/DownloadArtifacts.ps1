@@ -27,7 +27,7 @@ try
     # Get the build and release details
     $collectionUrl = $env:SYSTEM_TEAMFOUNDATIONCOLLECTIONURI
     $teamproject = $env:SYSTEM_TEAMPROJECT
-    $releaseId = $env:RELEASE_RELEASEID  
+    $releaseId = $env:RELEASE_RELEASEID
     $usedefaultcreds = $false;
 
     ### When running locally - make sure to comment before pushing!

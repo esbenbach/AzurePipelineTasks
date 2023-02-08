@@ -1,10 +1,10 @@
 {
     "manifestVersion": 1,
     "id": "s4tools",
-    "version": "0.1.5",
+    "version": "0.2.6",
     "name": "Infosoft Tooling",
     "publisher": "infosoft",
-    "description": "Tasks and stuff we use in the Infosoft dev flows (mostly CI/CD).",
+    "description": "Tasks and stuff we use in the Infosoft dev flows (CI/CD related).",
     "targets": [
         {
             "id": "Microsoft.VisualStudio.Services.Cloud"
@@ -48,11 +48,24 @@
             "properties": {
                 "name": "DownloadArtifacts"
             }
+        },
+        {
+            "id": "dotnet-vulnerability-reporter-task",
+            "type": "ms.vss-distributed-task.task",
+            "targets": [
+                "ms.vss-distributed-task.tasks"
+            ],
+            "properties": {
+                "name": "DotNetVulnerableReporter"
+            }
         }
     ],
     "files": [
         {
             "path": "DownloadArtifacts"
+        },
+        {
+            "path" : "DotNetVulnerableReporter"
         }
     ],
     "CustomerQnASupport": {
