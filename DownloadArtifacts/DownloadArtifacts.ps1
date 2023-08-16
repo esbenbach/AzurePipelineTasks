@@ -3,6 +3,39 @@ param()
 
 Trace-VstsEnteringInvocation $MyInvocation
 
+function ProcessArtifact($artifact)
+{
+    if ($artifact.resource.type -ne "PipelineArtifact")
+    {
+        Write-Debug "Skipping non-PipelineArtifact"
+        return
+    }
+
+    # Createing full artifact name similar to ArtifactAlias\Drop - this allows us to have multiple artifact aliases with the same "Drop" name (typically Drop because nothing was overridden).
+    $artifactFullName = join-path $linkedArtifact.alias $artifact.name 
+    Write-Verbose "Matching artificats to download against $artifactFullName";
+
+    if ($artifactsToDownload -contains $artifactFullName)
+    {
+        $dropDestination = join-path $artifactDestinationFolder $($linkedArtifact.definitionReference.definition.name)
+        $null = New-Item $dropDestination -ItemType Directory -Force #The null assignment avoids the output
+    
+        $dropArchiveDestination = Join-path $dropDestination ("{0}.zip" -f $artifact.name)
+        Invoke-Download -downloadUri "$($artifact.resource.downloadUrl)" -destination $dropArchiveDestination -usedefaultcreds $usedefaultcreds
+
+        Write-Verbose "Extracting file from $dropArchiveDestination to $dropDestination"
+        if ($expandArchive)
+        {
+            Expand-Archive -LiteralPath $dropArchiveDestination -DestinationPath $dropDestination -Force
+            Remove-Item $dropArchiveDestination -Force
+        }
+    }
+    else
+    {
+        Write-Debug "Skipping Build Artifact $($artifact.name) as it does not match anything";
+    }
+}
+
 try
 {
     [string]$artifactNames = Get-VstsInput -Name artifactNames
@@ -45,35 +78,7 @@ try
         
         foreach ($artifact in $buildArtifacts)
         {
-            if ($artifact.resource.type -ne "PipelineArtifact")
-            {
-                Write-Debug "Skipping non-PipelineArtifact"
-                continue
-            }
-
-            # Createing full artifact name similar to ArtifactAlias\Drop - this allows us to have multiple artifact aliases with the same "Drop" name (typically Drop because nothing was overridden).
-            $artifactFullName = join-path $linkedArtifact.alias $artifact.name 
-            Write-Verbose "Matching artificats to download against $artifactFullName";
-
-            if ($artifactsToDownload -contains $artifactFullName)
-            {
-                $dropDestination = join-path $artifactDestinationFolder $($linkedArtifact.definitionReference.definition.name)
-                $null = New-Item $dropDestination -ItemType Directory -Force #The null assignment avoids the output
-            
-                $dropArchiveDestination = Join-path $dropDestination ("{0}.zip" -f $artifact.name)
-                Invoke-Download -downloadUri "$($artifact.resource.downloadUrl)" -destination $dropArchiveDestination -usedefaultcreds $usedefaultcreds
-
-                Write-Verbose "Extracting file from $dropArchiveDestination to $dropDestination"
-                if ($expandArchive)
-                {
-                    Expand-Archive -LiteralPath $dropArchiveDestination -DestinationPath $dropDestination -Force
-                    Remove-Item $dropArchiveDestination -Force
-                }
-            }
-            else
-            {
-                Write-Debug "Skipping Build Artifact $($artifact.name) as it does not match anything";
-            }
+            ProcessArtifact $artifact
         }
     }
 
